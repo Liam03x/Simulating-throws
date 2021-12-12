@@ -3,6 +3,6 @@
 </br>
 In this project I am simulating physical events. 
 
-## Projectile Motion ## 
+<span style="color:blue">## Projectile Motion ##</span>
 
 Projectile Motion is the motioon of an object thrown or projected into the air, subject to only the acceleration of gravity. 
