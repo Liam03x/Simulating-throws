@@ -1,0 +1,52 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname Wurfsimulation) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(require 2htdp/universe)
+(require htdp/image)
+
+; physical constants
+(define ANGLE 90)
+(define ANGLE_RAD (* 0.5 pi))
+(define VELOCITY 50)
+(define G 9.81)
+(define TIMESPEED 3)
+
+; computes the zero(s)
+; ABC formula: [-b +- sqrt(b-4ac)] / 2a
+(define a (* -0.5 G))
+(define b (* VELOCITY (sin ANGLE_RAD)))
+(define -b (- 0 b))
+(define ZERO-
+  (/ (- -b (sqrt (sqr b))) (* 2 a)))
+
+; graphical constants
+(define BACKG (empty-scene 300 200))
+(define DOT (circle 4 "solid" "black"))
+
+; t is a number which represents time
+(define (main t)
+  (big-bang t
+    (on-tick tock)
+    (to-draw draw-point)
+    (stop-when last-posn?)))
+
+; t -> t
+(define (tock t) (+ t (* TIMESPEED (/ 1 28))))
+
+; t -> Posn
+; computes the next point of the ball
+; y(t) = -1/2gt^2 + (v0*sin(a))*t
+; given: t = 3; expected: P(78.79|83.49)
+; given: t = 8.67384 (y=0) => expected P(x|0)
+(define (next-posn x)
+  (make-posn (* VELOCITY (cos ANGLE_RAD) x)
+             (+ (* -0.5 G (sqr x)) (* (* VELOCITY (sin ANGLE_RAD)) x))))
+
+; Posn -> Image
+(define (draw-point x) (place-image DOT (posn-x (next-posn x)) (- (image-height BACKG)(posn-y (next-posn x))) BACKG))
+
+; X -> Boolean
+(define (last-posn? x)
+  (cond
+    [(>=  (posn-x (next-posn x)) (posn-x (next-posn ZERO-))) #true]
+    [else #f]))
