@@ -12,7 +12,7 @@
 (define G 9.81)
 (define TIMESPEED 1)
 
-; computes the [-]. The other zero 
+; computes the [-].
 ; ABC formula: [-b +- sqrt(b-4ac)] / 2a
 (define a (* -0.5 G))
 (define b (* VELOCITY (sin ANGLE_RAD)))
